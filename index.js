@@ -3,6 +3,7 @@ const bodyParser = require("body-parser");
 const app = express();
 const http = require("http");
 const user = require("./routes/users");
+const device = require("./routes/device");
 const cors = require("cors");
 app.use(cors());
 app.options("*", cors());
@@ -50,6 +51,7 @@ app.use(
 app.use(bodyParser.json());
 app.use("/", require("./routes/index"));
 app.use("/api/user", user);
+app.use("/api/device", device);
 
 const PORT = process.env.PORT || 3000;
 
