@@ -2,43 +2,30 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const Joi = require("joi");
 const UserSchema = new mongoose.Schema({
-  full_name: {
+  organization_id:'',
+
+  building_name: {
     type: String,
     required: true,
     minlength: 3,
     maxlength: 50
   },
-  address: {
+  building_address: {
     type: String,
-    // required: true,
     minlength: 5,
     maxlength: 50
   },
-  phone: {
+  building_phone: {
     type: String,
-    // required: true,
     minlength: 5,
     maxlength: 50
-  },
-  email: {
-    type: String,
-    // required: true,
-    minlength: 5,
-    maxlength: 255,
-    unique: true
-  },
-  password: {
-    type: String,
-    // required: true,
-    minlength: 5,
-    maxlength: 1024
   },
   created_date: {
     type: Date,
     default: Date.now
   }
 });
-UserSchema.methods.isValidPassword = async function(password) {
+UserSchema.methods.isValidPassword = async function (password) {
   const user = this;
   const compare = await bcrypt.compare(password, user.password);
   return compare;
@@ -50,13 +37,13 @@ function validateUser(user) {
     mobile_token: Joi.string(),
     phone: Joi.string(),
     address: Joi.string(),
-      
+
     director_id: Joi.string(),
     email: Joi.string().email(),
     password: Joi.string(),
     cnic: Joi.string(),
     roles: Joi.string(),
-      
+
     // roles: Joi.array().items({
     //   role: Joi.string()
     //     .min(5)

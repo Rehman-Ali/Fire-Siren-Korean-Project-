@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const Joi = require("joi");
 const UserSchema = new mongoose.Schema({
+  administrator_id:'',
   full_name: {
     type: String,
     required: true,
