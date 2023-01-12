@@ -12,22 +12,18 @@ const DeviceSchema = new mongoose.Schema({
     required: true
   
   },
-  organization_id:{
-    type: ObjectId,
-    ref: 'Organization',
-    required: true
-
-  },
   building_id: {
     type: ObjectId,
     ref: 'Building',
     required: true
-
   },
-  device_registered_user:{
+  added_by:{
     type: ObjectId,
-    ref : 'Operator',
-    required: true
+    refPath : 'addedValue',
+  },
+  addedValue: {
+    type: String,
+    enum: ['User', 'Operator', "Examiner"]
   }
   }, {
     timestamps: true

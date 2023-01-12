@@ -7,6 +7,7 @@ const device = require("./routes/device");
 const organization = require("./routes/organization");
 const operator = require("./routes/operator");
 const examiner = require("./routes/examiner");
+const building = require("./routes/building");
 const cors = require("cors");
 app.use(cors());
 app.options("*", cors());
@@ -46,6 +47,7 @@ app.use("/api/organization", organization);
 app.use("/api/operator", operator);
 app.use("/api/operator", operator);
 app.use("/api/examiner", examiner);
+app.use("/api/building", building);
 
 const PORT = process.env.PORT || 3000;
 

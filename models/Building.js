@@ -23,7 +23,6 @@ const BuildingSchema = new mongoose.Schema({
   },
   addedValue: {
     type: String,
-    required: true,
     enum: ['User', 'Operator']
   }
 }, { timestamps: true }

@@ -39,7 +39,7 @@ function validateUser(user) {
     last_name: Joi.string(),
     phone: Joi.string(),
     address: Joi.string(),
-    email: Joi.string().email(),
+    email: Joi.string(),
     password: Joi.string(),
   };
   return Joi.validate(user, schema);
