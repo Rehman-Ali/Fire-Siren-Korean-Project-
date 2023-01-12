@@ -1,7 +1,11 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
+const dotenv = require('dotenv');
+dotenv.config();
 const http = require("http");
+const swaggerJSDoc = require("swagger-jsdoc");
+const swaggerUi = require("swagger-ui-express");
 const user = require("./routes/users");
 const device = require("./routes/device");
 const organization = require("./routes/organization");
@@ -19,7 +23,7 @@ app.use(express.json({ extended: false }));
 
 
 let db;
- db ='mongodb+srv://seositesoft17:3WordPress!2K22!@cluster0.j0yuvqu.mongodb.net/?retryWrites=true&w=majority'
+db = 'mongodb+srv://seositesoft17:3WordPress!2K22!@cluster0.j0yuvqu.mongodb.net/?retryWrites=true&w=majority'
 
 //Connect to Mongo
 MONGODB_URI = mongoose
@@ -39,6 +43,45 @@ app.use(
     extended: true,
   })
 );
+
+const adminApiDoc = require('./swagger/UserAPi.doc')
+const deviceApiDoc = require('./swagger/DeviceApi.doc')
+
+//swagger config
+const swaggerOptions = {
+  swaggerDefinition: {
+    openapi: "3.0.0",
+    info: {
+      title: "Fire Siren Project API",
+      version: "1.0.0",
+    },
+    servers: [
+      {
+        url: 'http://localhost:3000/',
+        // url: process.env.HOST_URL
+      },
+    ],
+    paths: {
+      ...adminApiDoc,
+      ...deviceApiDoc,
+    },
+  },
+  apis: ["./routes*.js"],
+  tags: [
+    "adminSignUp",
+    "adminLogin",
+    "deviceRegister"
+  ],
+};
+
+const swaggerSpec = swaggerJSDoc(swaggerOptions);
+app.use("/api-doc", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+
+
+
+
+
 app.use(bodyParser.json());
 app.use("/", require("./routes/index"));
 app.use("/api/admin", user);

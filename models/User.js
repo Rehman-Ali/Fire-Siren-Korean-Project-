@@ -20,14 +20,14 @@ const UserSchema = new mongoose.Schema({
   password: {
     type: String,
   },
-  role:{
+  role: {
     type: String,
-    enum:['admin', 'super-admin']
+    enum: ['admin', 'super-admin']
   }
 }, {
   timestamps: true
 });
-UserSchema.methods.isValidPassword = async function(password) {
+UserSchema.methods.isValidPassword = async function (password) {
   const user = this;
   const compare = await bcrypt.compare(password, user.password);
   return compare;
