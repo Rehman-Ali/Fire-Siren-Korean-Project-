@@ -10,7 +10,6 @@ const DeviceSchema = new mongoose.Schema({
   device_installed_location: {
     type: String,
     required: true
-  
   },
   building_id: {
     type: ObjectId,
@@ -34,9 +33,9 @@ function validateDevice(Device) {
   const schema = {
     device_code: Joi.string(),
     device_installed_location: Joi.string(),
-    organization_id: Joi.objectId(),
     building_id: Joi.objectId(),
-    device_registered_user: Joi.objectId(),
+    added_by: Joi.objectId(),
+    addedValue:Joi.string(),
    
   };
   return Joi.validate(Device, schema);
