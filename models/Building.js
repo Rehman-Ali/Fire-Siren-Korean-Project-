@@ -17,6 +17,9 @@ const BuildingSchema = new mongoose.Schema({
   building_phone: {
     type: String,
   },
+  qr_code_image: {
+    type: String,
+  },
   added_by:{
     type: ObjectId,
     refPath: 'addedValue'
@@ -35,6 +38,8 @@ function validateBuilding(building) {
     building_name: Joi.string(),
     building_address: Joi.string(),
     building_phone: Joi.string(),
+    qr_code_image: Joi.string(),
+    addedValue: Joi.string(),
     added_by: Joi.objectId(),
   };
   return Joi.validate(building, schema);

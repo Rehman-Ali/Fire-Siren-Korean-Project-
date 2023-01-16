@@ -23,9 +23,14 @@ const ExaminerSchema = new mongoose.Schema({
   phone: {
     type: String,
   },
-  operator_id: {
+  operator_id:{
     type: ObjectId,
-    ref: 'Operator'
+    ref : 'Operator',
+  },
+  
+  organization_id: {
+    type: ObjectId,
+    ref: 'Organization'
   },
   status:{
     type:String,
@@ -56,6 +61,7 @@ function validateExaminer(examiner) {
     password: Joi.string().required(),
     role: Joi.string(),
     operator_id: Joi.objectId(),
+    organization_id: Joi.objectId(),
     status: Joi.string()
 
   };

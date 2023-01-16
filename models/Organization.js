@@ -23,7 +23,7 @@ const OrganizationSchema = new mongoose.Schema({
 const Organization = mongoose.model("Organization", OrganizationSchema);
 function validateOrganization(organization) {
   const schema = {
-    administrator_id: Joi.objectId().required(),
+    administrator_id: Joi.objectId(),
     organization_name: Joi.string().required(),
     phone: Joi.string(),
     address: Joi.string().required()

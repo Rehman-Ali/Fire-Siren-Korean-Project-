@@ -17,8 +17,6 @@ router.post("/register", auth, async (req, res) => {
   let findBuilding = await Building.findOne({ _id: req.body.building_id });
   if (!findBuilding) return res.json({ message: "Building not exist!", success: 0 });
 
-
-
   if (req.body.device_code === "" || req.body.device_installed_location === "" || req.body.building_id === "") return res.status(400).json({ message: "All field are required!", success: 0 });
   let device = new Device(req.body);
   device.added_by = req.user._id;
@@ -30,7 +28,6 @@ router.post("/register", auth, async (req, res) => {
     device.addedValue = 'Operator'
   }
   await device.save();
-
   res.json({
     message: "Device register successfully",
     success: 1
@@ -69,6 +66,7 @@ router.get("/list", auth, async (req, res) => {
 
 
 /////////// For Get Single Device  ///////////////
+
 router.get("/:id", auth, async (req, res) => {
   try {
     await Device.findOne({ _id: req.params.id }).populate([{ path: 'building_id', select: "-_id -organization_id -added_by -addedValue" },
@@ -90,6 +88,7 @@ router.get("/:id", auth, async (req, res) => {
     });
   }
 });
+
 /////////////////////////////////////////////////////////
 
 
@@ -99,8 +98,6 @@ router.get("/:id", auth, async (req, res) => {
 
 router.put("/:id", auth, async (req, res) => {
   try {
-
-
     // if (req.user.role !== 'admin') return res.status(400).json({ message: "No permission to perform this action", success: 0 });
     let device = await Device.findOne({ _id: req.params.id });
     console.log("device", device)
@@ -113,7 +110,6 @@ router.put("/:id", auth, async (req, res) => {
         success: 0
       });
     }
-
     await Device.findOneAndUpdate({ _id: req.params.id }, req.body, {
       new: true
     });
@@ -132,7 +128,7 @@ router.put("/:id", auth, async (req, res) => {
     });
   }
 });
-////////////////
+//////////////////////////////
 
 
 
@@ -154,13 +150,5 @@ router.delete("/:id", auth, async (req, res) => {
 });
 
 //////////////////////////////////////////////////////////
-
-
-
-
-
-
-
-
 
 module.exports = router;

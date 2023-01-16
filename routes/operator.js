@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { Organization } = require("../models/Organization");
+const { Examiner } = require("../models/Examiner");
 const { Operator, validate } = require("../models/Operator");
 const bcrypt = require("bcryptjs");
 const config = require("config");
@@ -69,7 +70,7 @@ router.get("/list", auth, async (req, res) => {
           }
 
           res.status(200).json({ message: 'Oprator get succesfully', success: 1, data: arr })
-        }else{
+        } else {
           res.status(200).json({ message: 'No Oprator exist', success: 1, data: [] })
 
         }
@@ -89,16 +90,16 @@ router.get("/list", auth, async (req, res) => {
 /////////// For Get Operator of all organization of specific Admin ///////////////
 router.get("/:id", auth, async (req, res) => {
   try {
-    
-    await Operator.findOne({_id: req.params.id}).select('-password').populate({ path: 'organization_id', select: ['organization_name', "address", "phone"] }).
-    exec(function (err, data) {
-      if (err) return res.status(400).json({ message: "something wrong happened!", success: 0 });
-      if (data) { 
-        res.status(200).json({ message: 'Operator data get successfully', success: 1, data: data })
-      }else{
-        res.status(200).json({ message: 'No Oprator exist', success: 1, data: {} })
-      }
-    })
+
+    await Operator.findOne({ _id: req.params.id }).select('-password').populate({ path: 'organization_id', select: ['organization_name', "address", "phone"] }).
+      exec(function (err, data) {
+        if (err) return res.status(400).json({ message: "something wrong happened!", success: 0 });
+        if (data) {
+          res.status(200).json({ message: 'Operator data get successfully', success: 1, data: data })
+        } else {
+          res.status(200).json({ message: 'No Oprator exist', success: 1, data: {} })
+        }
+      })
   } catch {
     res.status(500).json({
       data: [],
@@ -175,6 +176,54 @@ router.delete("/:id", auth, async (req, res) => {
 
 //////////////////////////////////////////////////////////
 
+
+//// Demote Operator  account to Examiner account////////////////
+
+router.post("/demote-operator/:operator_id", auth, async (req, res) => {
+  try {
+    let operator = await Operator.findOne({ _id: req.params.operator_id });
+
+    if (!operator)
+      return res.status(400).json({ message: "No operator with this id exists.", success: 0 });
+
+
+    let user = await Examiner.findOne({ email: operator.email });
+    if (user) return res.status(400).json({ message: "User with this email already registered.", success: 0 });
+    const body = {
+      first_name: operator.first_name,
+      last_name: operator.last_name,
+      email: operator.email,
+      password: operator.password,
+      address: operator.address,
+      phone: operator.phone,
+      status: "approved",
+      organization_id: operator.organization_id,
+      operator_id: req.body.operator_id,
+      role: "examiner"
+    }
+
+    user = new Examiner(body);
+
+    await user.save();
+
+    await Operator.deleteOne({ _id: req.params.operator_id });
+
+    res.status(200).json({
+      message: "Operator has been demoted to Examiner Successfully",
+      success: 1
+    });
+
+  } catch (err) {
+    res.status(400).json({
+      message: "Server error!",
+      success: 0
+    });
+  }
+
+});
+
+
+////////////////////////////////////////////////////////////////////
 
 
 

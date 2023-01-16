@@ -15,6 +15,7 @@ router.post("/register", auth, async (req, res) => {
   if (findOrganization) return res.json({ message: "Organization already Register!", success: 0 });
   
   let organization = new Organization(req.body);
+  organization.administrator_id = req.user._id
   await organization.save();
 
   res.status(200).json({

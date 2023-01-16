@@ -2,9 +2,31 @@ const express = require("express");
 const router = express.Router();
 const { Building, validate } = require("../models/Building");
 const auth = require("../middleware/auth")
+const multer = require("multer");
+
+
+
+
+
+/////////////////// Multer Configuration /////////////////////
+
+var storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'public/uploads')
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + '-' + file.originalname)
+  }
+});
+
+const upload = multer({ storage })
+
+///////////////////////////////////////////////////////
+
+
 
 /////////// For register building ///////////////
-router.post("/register", auth, async (req, res) => {
+router.post("/register", upload.single('image'),  auth, async (req, res) => {
 
   if (req.user.role === 'examiner') return res.status(400).json({ message: "No permission to perform this action", success: 0 });
 
@@ -15,6 +37,9 @@ router.post("/register", auth, async (req, res) => {
   if (findBuilding) return res.json({ message: "Buildiing already Register!", success: 0 });
 
   let building = new Building(req.body);
+  if (req.file){
+    building.qr_code_image = req.file.filename ;
+  }
   building.added_by = req.user._id;
   if (req.user.role === 'admin') {
     building.addedValue = 'User';
@@ -119,7 +144,7 @@ router.get("/:id", auth, async (req, res) => {
 
 ////////// UPDATE Specific Building with ID     
 
-router.put("/:id", auth, async (req, res) => {
+router.put("/:id", upload.single('image'), auth, async (req, res) => {
   try {
 
     if (req.user.role === 'examiner') return res.status(400).json({ message: "No permission to perform this action", success: 0 });
@@ -129,14 +154,27 @@ router.put("/:id", auth, async (req, res) => {
     if (!building) {
       return res.json({ message: "No building found with this ID", success: 0 });
     }
-    if (JSON.stringify(req.body) === '{}') {
-      return res.status(200).json({
-        message: "No field provide",
-        success: 0
-      });
-    }
 
-    await Building.findOneAndUpdate({ _id: req.params.id }, req.body, {
+    // if (JSON.stringify(req.body) === '{}') {
+    //   return res.status(200).json({
+    //     message: "No field provide",
+    //     success: 0
+    //   });
+    // }
+    let body ={};
+
+    if (req.file){
+      body = {
+        ...req.body,
+        qr_code_image: req.file.filename
+      }
+      }else{
+        body= {
+          ...req.body
+        }
+      }
+    
+    await Building.findOneAndUpdate({ _id: req.params.id }, body, {
       new: true
     });
 
