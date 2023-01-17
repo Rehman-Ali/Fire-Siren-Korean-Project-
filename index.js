@@ -46,11 +46,14 @@ app.use(
 
 const adminApiDoc = require('./swagger/UserAPi.doc')
 const deviceApiDoc = require('./swagger/DeviceApi.doc')
+const organizationApiDoc = require('./swagger/Organization.doc');
+const operatorApiDoc = require('./swagger/OperatorApi.doc')
 
 //swagger config
 const swaggerOptions = {
   swaggerDefinition: {
     openapi: "3.0.0",
+
     info: {
       title: "Fire Siren Project API",
       version: "1.0.0",
@@ -61,16 +64,36 @@ const swaggerOptions = {
         // url: process.env.HOST_URL
       },
     ],
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: 'apiKey',
+          in: 'header',
+          name: 'x-auth-token'
+        }
+      }
+    },
+    security: [{
+      bearerAuth: []
+    }],
     paths: {
       ...adminApiDoc,
       ...deviceApiDoc,
+      ...organizationApiDoc,
+      ...operatorApiDoc,
     },
   },
   apis: ["./routes*.js"],
   tags: [
-    "adminSignUp",
-    "adminLogin",
-    "deviceRegister"
+    "admin",
+    "Device",
+    "Organization",
+    "organizationRegister",
+    "organizationWithId",
+    "deleteOrganizationWithId",
+    "updateOrganizationWithId",
+    "Operator",
+
   ],
 };
 

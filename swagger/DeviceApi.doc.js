@@ -1,7 +1,20 @@
 const deviceRegister = {
-    tags: ["deviceRegister"],
+    tags: ["Device"],
     produces: "application/json",
-    description: "post method or api for admin signup",
+    description: "post method or api for device registration",
+    summary: "post method or api for device registration",
+    components: {
+        securitySchemes: {
+          bearerAuth: {
+            type: 'apiKey',
+            in: 'header',
+            name: 'x-auth-token'
+          }
+        }
+      },
+      security: [{
+        bearerAuth: []
+      }],
     requestBody: {
         content: {
             "application/json": {
@@ -18,7 +31,7 @@ const deviceRegister = {
                         },
                         building_id: {
                             type: String,
-                            example: "63b3df08e3aa7f09708983f10",
+                            example: "63bfe4ba5903593e2c714e50",
                         },
                     },
                 },

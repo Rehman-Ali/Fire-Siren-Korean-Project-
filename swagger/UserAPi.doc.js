@@ -1,7 +1,8 @@
 const adminSignUp = {
-    tags: ["adminSignUp"],
+    tags: ["admin"],
     produces: "application/json",
     description: "post method or api for admin signup",
+    summary: "post method or api for admin signup",
     requestBody: {
         content: {
             "application/json": {
@@ -63,9 +64,10 @@ const adminSignUp = {
 };
 
 const adminLogin ={
-    tags: ["adminSignUp"],
+    tags: ["admin"],
     produces: "application/json",
-    description: "post method or api for admin signup",
+    description: "post method or api for admin login",
+    summary: "post method or api for admin login",
     requestBody: {
         content: {
             "application/json": {

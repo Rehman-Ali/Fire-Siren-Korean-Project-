@@ -79,7 +79,7 @@ router.get("/administrator-organization/:id", auth, async (req, res) => {
     }).populate({ path: 'administrator_id', select: ['first_name', "last_name", "email", "address", "phone", "role"] }).
       exec(function (err, data) {
         if (err) return res.status(400).json({ message: "something wrong happened!", success: 0 });
-        if (data.length < 0) {
+        if (!data) {
           res.status(200).json({
             message: "No organization found!",
             success: 1,
