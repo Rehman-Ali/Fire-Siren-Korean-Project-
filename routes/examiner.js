@@ -9,6 +9,7 @@ const jwt = require("jsonwebtoken");
 const auth = require("../middleware/auth");
 
 
+
 /////////// For register Examiner ///////////////
 router.post("/register", async (req, res) => {
 
@@ -54,7 +55,6 @@ router.get("/list/:operator_id", auth, async (req, res) => {
   try {
 
     // if (req.user.role !== 'admin') return res.status(400).json({ message: "No permission to perform this action", success: 0 });
-
     let findOperator = await Operator.findOne({ _id: req.params.operator_id });
     if (!findOperator) return res.status(400).json({ message: "No data exist against your ID!", success: 0 });
 
@@ -81,15 +81,12 @@ router.get("/list/:operator_id", auth, async (req, res) => {
 /////////////////////////////////////////////////////////
 
 
-
-
 /////////// For Get Examiner of all organization of specific Operator ///////////////
 
 router.get("/organization/:organization_id", auth, async (req, res) => {
   try {
 
     // if (req.user.role !== 'admin') return res.status(400).json({ message: "No permission to perform this action", success: 0 });
-
     let findOrganization = await Organization.findOne({ _id: req.params.organization_id });
     if (!findOrganization) return res.status(400).json({ message: "No data exist against your ID!", success: 0 });
 
@@ -115,12 +112,9 @@ router.get("/organization/:organization_id", auth, async (req, res) => {
 /////////////////////////////////////////////////////////
 
 
-
-
 /////////// For Get Single Exanimar  ///////////////
 router.get("/:id", auth, async (req, res) => {
   try {
-
     await Examiner.findOne({ _id: req.params.id }).select('-password').populate([{ path: 'operator_id', select: ["first_name", "last_name", "address", "phone"]
   },{ path: 'organization_id', select: "-_id -administrator_id"
   }]).
@@ -143,19 +137,11 @@ router.get("/:id", auth, async (req, res) => {
 /////////////////////////////////////////////////////////
 
 
-
-
 ///////////// Update the Operator Info (status and other) /////////////////
-
-
-
 router.put("/:id", auth, async (req, res) => {
   try {
-
     // if (req.user.role !== 'admin') return res.status(400).json({ message: "No permission to perform this action", success: 0 });
-
     let examiner = await Examiner.findOne({ _id: req.params.id });
-
     if (!examiner) {
       return res.json({ message: "No examiner found with this ID", success: 0 });
     }
@@ -165,11 +151,9 @@ router.put("/:id", auth, async (req, res) => {
         success: 0
       });
     }
-
     await Examiner.findOneAndUpdate({ _id: req.params.id }, req.body, {
       new: true
     });
-
     res.status(200).json({
       message: "Examiner has been updated successfully",
       success: 1
@@ -183,20 +167,16 @@ router.put("/:id", auth, async (req, res) => {
     });
   }
 });
-////////////////
-
+//////////////////////////////////////////////
 
 
 //////// For Delete Examiner ///////////////////////
 
 router.delete("/:id", auth, async (req, res) => {
   // if (req.user.role !== 'admin') return res.status(400).json({ message: "No permission to perform this action", success: 0 });
-
-
   let examiner = await Examiner.findOne({ _id: req.params.id });
   if (!examiner)
     return res.status(400).json({ message: "No examiner with this id exists.", success: 0 });
-
   await Examiner.deleteOne({ _id: req.params.id });
 
   res.status(200).json({
@@ -208,17 +188,13 @@ router.delete("/:id", auth, async (req, res) => {
 //////////////////////////////////////////////////////////
 
 
-
 //// Promote Examiner account to Operator account////////////////
-
 router.get("/promte-examiner/:id", auth, async (req, res) => {
   try {
     let examiner = await Examiner.findOne({ _id: req.params.id });
 
     if (!examiner)
       return res.status(400).json({ message: "No examiner with this id exists.", success: 0 });
-
-
     // let req_email = req.body.email;
     // let email = req_email.toLowerCase();
     let user = await Operator.findOne({ email: examiner.email });
@@ -254,8 +230,6 @@ router.get("/promte-examiner/:id", auth, async (req, res) => {
   }
 
 });
-
-
 ////////////////////////////////////////////////////////////////////
 
 

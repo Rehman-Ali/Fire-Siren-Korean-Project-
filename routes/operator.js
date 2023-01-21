@@ -121,23 +121,30 @@ router.put("/:id", auth, async (req, res) => {
   try {
 
     // if (req.user.role !== 'admin') return res.status(400).json({ message: "No permission to perform this action", success: 0 });
-
+      
     let operator = await Operator.findOne({ _id: req.params.id });
-
+    
     if (!operator) {
       return res.json({ message: "No Operator found with this ID", success: 0 });
     }
+
+  
     if (JSON.stringify(req.body) === '{}') {
       return res.status(200).json({
         message: "No field provide",
         success: 0
       });
     }
+  
+    let operatorEmail = await Operator.findOne({ email: req.body.email });
+    if (operatorEmail) {
+      return res.json({ message: "Operator with this email exist", success: 0 });
+    }
 
     await Operator.findOneAndUpdate({ _id: req.params.id }, req.body, {
       new: true
     });
-
+    console.log("req", operator, req.body)
     res.status(200).json({
       message: "Operator has been updated successfully",
       success: 1
