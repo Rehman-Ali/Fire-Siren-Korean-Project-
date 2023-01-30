@@ -49,7 +49,7 @@ app.use("/api/operator", operator);
 app.use("/api/examiner", examiner);
 app.use("/api/building", building);
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8080;
 
 var server = http.createServer(app);
 
