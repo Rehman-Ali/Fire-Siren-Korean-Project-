@@ -10,6 +10,7 @@ const auth = require("../middleware/auth");
 
 
 
+
 /////////// For register Examiner ///////////////
 router.post("/register", async (req, res) => {
 
@@ -170,8 +171,8 @@ router.put("/:id", auth, async (req, res) => {
 //////////////////////////////////////////////
 
 
-//////// For Delete Examiner ///////////////////////
 
+//////// For Delete Examiner ///////////////////////
 router.delete("/:id", auth, async (req, res) => {
   // if (req.user.role !== 'admin') return res.status(400).json({ message: "No permission to perform this action", success: 0 });
   let examiner = await Examiner.findOne({ _id: req.params.id });
@@ -184,7 +185,6 @@ router.delete("/:id", auth, async (req, res) => {
     success: 1
   });
 });
-
 //////////////////////////////////////////////////////////
 
 
@@ -228,7 +228,6 @@ router.get("/promte-examiner/:id", auth, async (req, res) => {
       success: 0
     });
   }
-
 });
 ////////////////////////////////////////////////////////////////////
 

@@ -140,7 +140,7 @@ router.delete("/:id", auth, async (req, res) => {
   let device = await Device.findOne({ _id: req.params.id });
   if (!device)
     return res.status(400).json({ message: "No Device with this id exists.", success: 0 });
-
+    
   await Device.deleteOne({ _id: req.params.id });
   res.status(200).json({
     message: "Device has been deleted Successfully",
@@ -149,6 +149,11 @@ router.delete("/:id", auth, async (req, res) => {
 
 });
 
+
 //////////////////////////////////////////////////////////
+
+
+
+
 
 module.exports = router;

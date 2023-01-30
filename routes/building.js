@@ -1,10 +1,11 @@
 const express = require("express");
 const router = express.Router();
 const { Building, validate } = require("../models/Building");
+var QRCode = require('qrcode');
+var toSJIS = require('qrcode/helper/to-sjis')
 const auth = require("../middleware/auth")
+const base64Img = require('base64-img');
 const multer = require("multer");
-
-
 
 
 
@@ -26,7 +27,7 @@ const upload = multer({ storage })
 
 
 /////////// For register building ///////////////
-router.post("/register", upload.single('image'),  auth, async (req, res) => {
+router.post("/register",  auth, async (req, res) => {
 
   if (req.user.role === 'examiner') return res.status(400).json({ message: "No permission to perform this action", success: 0 });
 
@@ -37,9 +38,7 @@ router.post("/register", upload.single('image'),  auth, async (req, res) => {
   if (findBuilding) return res.json({ message: "Buildiing already Register!", success: 0 });
 
   let building = new Building(req.body);
-  if (req.file){
-    building.qr_code_image = req.file.filename ;
-  }
+ 
   building.added_by = req.user._id;
   if (req.user.role === 'admin') {
     building.addedValue = 'User';
@@ -47,12 +46,33 @@ router.post("/register", upload.single('image'),  auth, async (req, res) => {
   if (req.user.role === 'operator') {
     building.addedValue = 'Operator';
   }
-  await building.save();
+  
+ 
+  // Converting into QR-code image in base-64
+  let stringdata = JSON.stringify(req.body)
+  let fileName = '';
+  QRCode.toDataURL(stringdata, { toSJISFunc: toSJIS }, function (err, url) {
+    base64Img.img( url, './public/uploads', Date.now(), async function(err, filepath){
+      const pathArr = filepath.split('/');
+       fileName = pathArr[pathArr.length -1];
 
-  res.status(200).json({
-    message: "Building register successfully",
-    success: 1
+      building.qr_code_image = fileName.slice(15, 100);
+      await building.save();
+      res.status(200).json({
+        message: "Building register successfully",
+        success: 1
+      });
+
+    })
   });
+ 
+
+  // QRCode.toString(stringdata,{type:'terminal'}, function (err, url) {
+  //   if(err) return console.log("error occurred")
+  //   console.log(url)
+  // })
+
+
 
 });
 /////////////////////////////////////////////////////////

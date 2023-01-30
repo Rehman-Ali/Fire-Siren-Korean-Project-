@@ -17,6 +17,10 @@ const BuildingSchema = new mongoose.Schema({
   building_phone: {
     type: String,
   },
+  building_state: {
+    type: String,
+    enum:['Safe', 'Info', 'Notify', 'Warning', 'Danger']
+  },
   qr_code_image: {
     type: String,
   },
