@@ -56,7 +56,7 @@ router.post("/register",  auth, async (req, res) => {
       const pathArr = filepath.split('/');
        fileName = pathArr[pathArr.length -1];
 
-      building.qr_code_image = fileName.slice(15, 100);
+      building.qr_code_image = fileName;
       await building.save();
       res.status(200).json({
         message: "Building register successfully",
