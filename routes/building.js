@@ -4,25 +4,7 @@ const { Building, validate } = require("../models/Building");
 var QRCode = require('qrcode');
 var toSJIS = require('qrcode/helper/to-sjis')
 const auth = require("../middleware/auth")
-const base64Img = require('base64-img');
-const multer = require("multer");
-
-
-
-/////////////////// Multer Configuration /////////////////////
-
-var storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, 'public/uploads')
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + '-' + file.originalname)
-  }
-});
-
-const upload = multer({ storage })
-
-///////////////////////////////////////////////////////
+const cloudinary = require('cloudinary');
 
 
 
@@ -47,31 +29,34 @@ router.post("/register",  auth, async (req, res) => {
     building.addedValue = 'Operator';
   }
   
- 
   // Converting into QR-code image in base-64
   let stringdata = JSON.stringify(req.body)
-  let fileName = '';
-  QRCode.toDataURL(stringdata, { toSJISFunc: toSJIS }, function (err, url) {
-    base64Img.img( url, './public/uploads', Date.now(), async function(err, filepath){
-      const pathArr = filepath.split('/');
-       fileName = pathArr[pathArr.length -1];
-
-      building.qr_code_image = fileName;
+  QRCode.toDataURL(stringdata, { toSJISFunc: toSJIS },  async function (err, url) {
+    const options = {
+      use_filename: true,
+      unique_filename: false,
+      overwrite: true,
+    };
+    try {
+      // Upload the image
+      const result = await cloudinary.uploader.upload(url, options);
+      let obj = {
+        image_url : result.url,
+        public_id : result.public_id
+      }
+      building.qr_info = obj;
       await building.save();
       res.status(200).json({
         message: "Building register successfully",
         success: 1
       });
+  
+    } catch (error) {
+      console.error(error);
+    }
+   
 
-    })
   });
- 
-
-  // QRCode.toString(stringdata,{type:'terminal'}, function (err, url) {
-  //   if(err) return console.log("error occurred")
-  //   console.log(url)
-  // })
-
 
 
 });
@@ -164,7 +149,7 @@ router.get("/:id", auth, async (req, res) => {
 
 ////////// UPDATE Specific Building with ID     
 
-router.put("/:id", upload.single('image'), auth, async (req, res) => {
+router.put("/:id", auth, async (req, res) => {
   try {
 
     if (req.user.role === 'examiner') return res.status(400).json({ message: "No permission to perform this action", success: 0 });
@@ -183,16 +168,16 @@ router.put("/:id", upload.single('image'), auth, async (req, res) => {
     // }
     let body ={};
 
-    if (req.file){
-      body = {
-        ...req.body,
-        qr_code_image: req.file.filename
-      }
-      }else{
-        body= {
-          ...req.body
-        }
-      }
+    // if (req.file){
+    //   body = {
+    //     ...req.body,
+    //     qr_code_image: req.file.filename
+    //   }
+    //   }else{
+    //     body= {
+    //       ...req.body
+    //     }
+    //   }
     
     await Building.findOneAndUpdate({ _id: req.params.id }, body, {
       new: true

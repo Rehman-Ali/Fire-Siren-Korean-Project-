@@ -2,24 +2,30 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const app = express();
 const http = require("http");
+const cloudinary = require('cloudinary');
 const user = require("./routes/users");
 const device = require("./routes/device");
 const organization = require("./routes/organization");
 const operator = require("./routes/operator");
 const examiner = require("./routes/examiner");
 const building = require("./routes/building");
+require('dotenv').config({path: __dirname + '/.env'})
 const cors = require("cors");
 app.use(cors());
 app.options("*", cors());
 const mongoose = require('mongoose');
+
 app.use(express.static("public"));
 app.use("/uploads", express.static(__dirname + "/uploads"));
 app.use(express.json({ extended: false }));
 
+cloudinary.config({ 
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME, 
+  api_key: process.env.CLOUDINARY_API_KEY, 
+  api_secret: process.env.CLOUDINARY_API_SECRET 
+});
 
-
-let db;
- db ='mongodb+srv://seositesoft17:3WordPress!2K22!@cluster0.j0yuvqu.mongodb.net/?retryWrites=true&w=majority'
+let db =`mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@cluster0.j0yuvqu.mongodb.net/?retryWrites=true&w=majority`
 
 //Connect to Mongo
 MONGODB_URI = mongoose
