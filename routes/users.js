@@ -57,47 +57,10 @@ router.post("/login", async (req, res, next) => {
     return res.status(400).json({ message: "Invalid Credentials" , success : 0});
   }
 });
+//////////////////////////////////////
 
 
 
-
-
-router.patch("/profile", auth, async (req, res) => {
-  let user_id = req.user._id;
-  let users = await User.findByIdAndUpdate(
-    { _id: user_id },
-    {
-      $set: {
-        cnic: req.body.cnic,
-        phone: req.body.phone,
-        name: req.body.name,
-        email: req.body.email,
-      },
-    },
-    { new: true }
-  );
-
-  return res.json({
-    email: users.email,
-    cnic: users.cnic,
-    phone: users.phone,
-    name: users.name,
-  });
-});
-
-
-
-router.patch("/user-edit", auth, async (req, res) => {
-  const user_id = req.user._id;
-  let user = await User.findOne({ _id: user_id });
-  if (!user) return res.json({ message: "User Does Not Exists" });
-  user = await User.updateOne(
-    { _id: user_id },
-    { $set: { mobile_token: req.body.mobile_token } },
-    { new: true }
-  );
-  return res.json({ message: "Mobile token added successfully" });
-});
 
 
 

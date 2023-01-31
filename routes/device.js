@@ -36,8 +36,6 @@ router.post("/register", auth, async (req, res) => {
 //////////////////////////////////////////////////////////////
 
 
-
-
 /////////// For Get All Device ///////////////
 
 router.get("/list", auth, async (req, res) => {
@@ -66,7 +64,6 @@ router.get("/list", auth, async (req, res) => {
 
 
 /////////// For Get Single Device  ///////////////
-
 router.get("/:id", auth, async (req, res) => {
   try {
     await Device.findOne({ _id: req.params.id }).populate([{ path: 'building_id', select: "-_id -organization_id -added_by -addedValue" },
@@ -88,14 +85,12 @@ router.get("/:id", auth, async (req, res) => {
     });
   }
 });
-
 /////////////////////////////////////////////////////////
 
 
 
 
 ///////////// Update the Device Info  /////////////////
-
 router.put("/:id", auth, async (req, res) => {
   try {
     // if (req.user.role !== 'admin') return res.status(400).json({ message: "No permission to perform this action", success: 0 });
@@ -133,14 +128,13 @@ router.put("/:id", auth, async (req, res) => {
 
 
 //////// For Delete Device ///////////////////////
-
 router.delete("/:id", auth, async (req, res) => {
   // if (req.user.role !== 'admin') return res.status(400).json({ message: "No permission to perform this action", success: 0 });
 
   let device = await Device.findOne({ _id: req.params.id });
   if (!device)
     return res.status(400).json({ message: "No Device with this id exists.", success: 0 });
-    
+
   await Device.deleteOne({ _id: req.params.id });
   res.status(200).json({
     message: "Device has been deleted Successfully",
@@ -148,8 +142,6 @@ router.delete("/:id", auth, async (req, res) => {
   });
 
 });
-
-
 //////////////////////////////////////////////////////////
 
 

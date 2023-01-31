@@ -201,13 +201,10 @@ router.put("/:id", auth, async (req, res) => {
 
 
 
-
 //////// For Delete Building ///////////////////////
 
 router.delete("/:id", auth, async (req, res) => {
   if (req.user.role === 'examiner') return res.status(400).json({ message: "No permission to perform this action", success: 0 });
-
-
   let building = await Building.findOne({ _id: req.params.id });
   if (!building)
     return res.status(400).json({ message: "No building exists with this ID.", success: 0 });
@@ -221,8 +218,6 @@ router.delete("/:id", auth, async (req, res) => {
 });
 
 //////////////////////////////////////////////////////////
-
-
 
 
 

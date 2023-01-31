@@ -9,6 +9,7 @@ const organization = require("./routes/organization");
 const operator = require("./routes/operator");
 const examiner = require("./routes/examiner");
 const building = require("./routes/building");
+const alarmSound = require("./routes/alarmSound");
 require('dotenv').config({path: __dirname + '/.env'})
 const cors = require("cors");
 app.use(cors());
@@ -54,6 +55,7 @@ app.use("/api/operator", operator);
 app.use("/api/operator", operator);
 app.use("/api/examiner", examiner);
 app.use("/api/building", building);
+app.use("/api/alarm-sound", alarmSound);
 
 const PORT = process.env.PORT || 8080;
 
