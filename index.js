@@ -10,11 +10,13 @@ const operator = require("./routes/operator");
 const examiner = require("./routes/examiner");
 const building = require("./routes/building");
 const alarmSound = require("./routes/alarmSound");
+const fireAlarm  = require("./routes/fireAlarm");
 require('dotenv').config({path: __dirname + '/.env'})
 const cors = require("cors");
 app.use(cors());
 app.options("*", cors());
 const mongoose = require('mongoose');
+
 
 app.use(express.static("public"));
 app.use("/uploads", express.static(__dirname + "/uploads"));
@@ -56,6 +58,7 @@ app.use("/api/operator", operator);
 app.use("/api/examiner", examiner);
 app.use("/api/building", building);
 app.use("/api/alarm-sound", alarmSound);
+app.use("/api/fire-alarm", fireAlarm);
 
 const PORT = process.env.PORT || 8080;
 

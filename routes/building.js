@@ -54,11 +54,7 @@ router.post("/register",  auth, async (req, res) => {
     } catch (error) {
       console.error(error);
     }
-   
-
   });
-
-
 });
 /////////////////////////////////////////////////////////
 
@@ -66,12 +62,9 @@ router.post("/register",  auth, async (req, res) => {
 
 
 /////////// For Get building ///////////////
-
 router.get("/get-with-organization/:organization_id", auth, async (req, res) => {
   try {
-
     if (req.user.role === 'examiner') return res.status(400).json({ message: "No permission to perform this action", success: 0 });
-
     await Building.find({
       organization_id: req.params.organization_id
     })
@@ -93,7 +86,6 @@ router.get("/get-with-organization/:organization_id", auth, async (req, res) => 
           });
         }
       });
-
   } catch {
     res.status(500).json({
       data: [],
@@ -147,12 +139,13 @@ router.get("/:id", auth, async (req, res) => {
 
 
 
+
 ////////// UPDATE Specific Building with ID     
 
 router.put("/:id", auth, async (req, res) => {
   try {
 
-    if (req.user.role === 'examiner') return res.status(400).json({ message: "No permission to perform this action", success: 0 });
+    // if (req.user.role === 'examiner') return res.status(400).json({ message: "No permission to perform this action", success: 0 });
 
     let building = await Building.findOne({ _id: req.params.id });
 
@@ -218,6 +211,9 @@ router.delete("/:id", auth, async (req, res) => {
 });
 
 //////////////////////////////////////////////////////////
+
+
+
 
 
 

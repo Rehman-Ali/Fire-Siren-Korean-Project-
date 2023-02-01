@@ -2,44 +2,30 @@ const mongoose = require("mongoose");
 const Joi = require("joi");
 Joi.objectId = require('joi-objectid')(Joi);
 const ObjectId = mongoose.Schema.Types.ObjectId
-const AlarmSoundSchema = new mongoose.Schema({
-  alarm_sound_file:{
-      image_url:{
-        type: String,
-      },
-      public_id:{
-        type: String
-      }
+const FireAlarmSchema = new mongoose.Schema({
+  device_code:{
+    type: String
   },
-  building_id: {
+  device_id: {
     type: ObjectId,
-    ref: 'Building',
+    ref: 'Device',
   },
-  added_by:{
-    type: ObjectId,
-    refPath : 'addedValue',
-  },
-  addedValue: {
-    type: String,
-    enum: ['User']
+  message:{
+    type: String
   }
   }, {
     timestamps: true
   });
 
-const AlarmSound = mongoose.model("AlarmSound", AlarmSoundSchema);
-function validateAlarmSound(AlarmSound) {
+const FireAlarm = mongoose.model("FireAlarm", FireAlarmSchema);
+function validateFireAlarm(FireAlarm) {
   const schema = {
-    alarm_sound_file:  Joi.object({
-      image_url: Joi.string(),
-      public_id: Joi.string()
-    }),
-    building_id: Joi.objectId(),
-    added_by: Joi.objectId(),
-    addedValue:Joi.string(),
+    device_id: Joi.objectId(),
+    message:Joi.string(),
+    device_code: Joi.string()
    
   };
-  return Joi.validate(AlarmSound, schema);
+  return Joi.validate(FireAlarm, schema);
 }
-exports.AlarmSound = AlarmSound;
-exports.validate = validateAlarmSound;
+exports.FireAlarm = FireAlarm;
+exports.validate = validateFireAlarm;

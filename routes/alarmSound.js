@@ -1,7 +1,7 @@
 const express = require("express");
 const auth = require("../middleware/auth");
 const router = express.Router();
-const { AlarmSound, validate } = require("../models/FireAlarm");
+const { AlarmSound, validate } = require("../models/AlarmSound");
 const { Building } = require("../models/Building");
 const multer = require('multer');
 const cloudinary = require('cloudinary').v2;
@@ -31,6 +31,8 @@ router.get("/list/:building_id", auth, async (req, res) => {
     });
   }
 });
+
+
 /////////////////////////////////////////////////////////
 
 
