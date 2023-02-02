@@ -30,7 +30,7 @@ router.post("/register", async (req, res) => {
   user.password = hash;
   user.role = "examiner";
   user.status = "pending";
-  user.organization_id = operator.organization_id ;
+  user.organization_id = operator.organization_id;
   await user.save();
   const token = jwt.sign(
     { _id: user._id, role: user.role },
@@ -59,9 +59,11 @@ router.get("/list/:operator_id", auth, async (req, res) => {
     let findOperator = await Operator.findOne({ _id: req.params.operator_id });
     if (!findOperator) return res.status(400).json({ message: "No data exist against your ID!", success: 0 });
 
-    await Examiner.find({operator_id: req.params.operator_id}).select('-password').populate([{ path: 'operator_id', select: ["first_name", "last_name", "address", "phone"]
-  },{ path: 'organization_id', select: "-_id -administrator_id"
-  }]).
+    await Examiner.find({ operator_id: req.params.operator_id }).select('-password').populate([{
+      path: 'operator_id', select: ["first_name", "last_name", "address", "phone"]
+    }, {
+      path: 'organization_id', select: "-_id -administrator_id"
+    }]).
       exec(function (err, data) {
         if (err) return res.status(400).json({ message: "something wrong happened!", success: 0 });
         if (data.length > 0) {
@@ -91,9 +93,11 @@ router.get("/organization/:organization_id", auth, async (req, res) => {
     let findOrganization = await Organization.findOne({ _id: req.params.organization_id });
     if (!findOrganization) return res.status(400).json({ message: "No data exist against your ID!", success: 0 });
 
-    await Examiner.find({organization_id: req.params.organization_id}).select('-password').populate([{ path: 'operator_id', select: ["first_name", "last_name", "address", "phone"]
-  },{ path: 'organization_id', select: "-_id -administrator_id"
-  }]).
+    await Examiner.find({ organization_id: req.params.organization_id }).select('-password').populate([{
+      path: 'operator_id', select: ["first_name", "last_name", "address", "phone"]
+    }, {
+      path: 'organization_id', select: "-_id -administrator_id"
+    }]).
       exec(function (err, data) {
         if (err) return res.status(400).json({ message: "something wrong happened!", success: 0 });
         if (data.length > 0) {
@@ -116,9 +120,11 @@ router.get("/organization/:organization_id", auth, async (req, res) => {
 /////////// For Get Single Exanimar  ///////////////
 router.get("/:id", auth, async (req, res) => {
   try {
-    await Examiner.findOne({ _id: req.params.id }).select('-password').populate([{ path: 'operator_id', select: ["first_name", "last_name", "address", "phone"]
-  },{ path: 'organization_id', select: "-_id -administrator_id"
-  }]).
+    await Examiner.findOne({ _id: req.params.id }).select('-password').populate([{
+      path: 'operator_id', select: ["first_name", "last_name", "address", "phone"]
+    }, {
+      path: 'organization_id', select: "-_id -administrator_id"
+    }]).
       exec(function (err, data) {
         if (err) return res.status(400).json({ message: "something wrong happened!", success: 0 });
         if (data) {
@@ -212,7 +218,7 @@ router.get("/promte-examiner/:id", auth, async (req, res) => {
     }
 
     user = new Operator(body);
-    
+
     await user.save();
 
     await Examiner.deleteOne({ _id: req.params.id });

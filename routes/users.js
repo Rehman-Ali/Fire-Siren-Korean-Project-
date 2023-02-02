@@ -11,11 +11,11 @@ const { User, validate } = require("../models/User");
 
 router.post("/signup", async (req, res) => {
   const { error } = validate(req.body);
-  if (error) return res.status(400).json({message:error.details[0].message, success: 0});
+  if (error) return res.status(400).json({ message: error.details[0].message, success: 0 });
   let req_email = req.body.email;
   let email = req_email.toLowerCase();
   let user = await User.findOne({ email: email });
-  if (user) return res.status(400).json({message:"User already registered.", success: 0});
+  if (user) return res.status(400).json({ message: "User already registered.", success: 0 });
   const hash = await bcrypt.hash(req.body.password, 10);
   user = new User(req.body);
   user.email = email;
@@ -40,7 +40,7 @@ router.post("/signup", async (req, res) => {
 ///////////// For Login Admin User
 router.post("/login", async (req, res, next) => {
   let user = await User.findOne({ email: req.body.email });
-  if (!user) return res.status(404).json({ message: "User does not exist" , sucesss : 0});
+  if (!user) return res.status(404).json({ message: "User does not exist", sucesss: 0 });
   const compare = await bcrypt.compare(req.body.password, user.password);
   if (compare) {
     const token = jwt.sign(
@@ -52,9 +52,9 @@ router.post("/login", async (req, res, next) => {
       user_id: user._id,
       token: token,
       success: 1
-      });
+    });
   } else {
-    return res.status(400).json({ message: "Invalid Credentials" , success : 0});
+    return res.status(400).json({ message: "Invalid Credentials", success: 0 });
   }
 });
 //////////////////////////////////////

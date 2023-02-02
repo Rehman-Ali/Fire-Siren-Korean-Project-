@@ -13,7 +13,7 @@ router.post("/register", auth, async (req, res) => {
 
   let findOrganization = await Organization.findOne({ organization_name: req.body.organization_name });
   if (findOrganization) return res.json({ message: "Organization already Register!", success: 0 });
-  
+
   let organization = new Organization(req.body);
   organization.administrator_id = req.user._id
   await organization.save();
@@ -70,7 +70,7 @@ router.get("/list-with-administor", auth, async (req, res) => {
 
 router.get("/administrator-organization/:id", auth, async (req, res) => {
   try {
-    
+
     if (req.user.role !== 'admin') return res.status(400).json({ message: "No permission to perform this action", success: 0 });
     await Organization.findOne({
       _id: req.params.id,

@@ -8,8 +8,8 @@ const cloudinary = require('cloudinary');
 
 
 
-/////////// For register building ///////////////
-router.post("/register",  auth, async (req, res) => {
+/////////// For register building ///////////////////////
+router.post("/register", auth, async (req, res) => {
 
   if (req.user.role === 'examiner') return res.status(400).json({ message: "No permission to perform this action", success: 0 });
 
@@ -17,10 +17,11 @@ router.post("/register",  auth, async (req, res) => {
   if (error) return res.status(400).json({ message: error.details[0].message, success: 0 });
 
   let findBuilding = await Building.findOne({ building_name: req.body.building_name });
-  if (findBuilding) return res.json({ message: "Buildiing already Register!", success: 0 });
+  console.log(findBuilding)
+  if (findBuilding) return res.json({ message: "Building already Register!", success: 0 });
 
   let building = new Building(req.body);
- 
+
   building.added_by = req.user._id;
   if (req.user.role === 'admin') {
     building.addedValue = 'User';
@@ -28,10 +29,10 @@ router.post("/register",  auth, async (req, res) => {
   if (req.user.role === 'operator') {
     building.addedValue = 'Operator';
   }
-  
+  await building.save();
   // Converting into QR-code image in base-64
-  let stringdata = JSON.stringify(req.body)
-  QRCode.toDataURL(stringdata, { toSJISFunc: toSJIS },  async function (err, url) {
+  let stringdata = JSON.stringify(building)
+  QRCode.toDataURL(stringdata, { toSJISFunc: toSJIS }, async function (err, url) {
     const options = {
       use_filename: true,
       unique_filename: false,
@@ -41,16 +42,20 @@ router.post("/register",  auth, async (req, res) => {
       // Upload the image
       const result = await cloudinary.uploader.upload(url, options);
       let obj = {
-        image_url : result.url,
-        public_id : result.public_id
+        image_url: result.url,
+        public_id: result.public_id
       }
-      building.qr_info = obj;
-      await building.save();
+      // building.qr_info = obj;
+      await Building.findOneAndUpdate({ _id: building._id }, {
+        qr_info: obj
+      }, {
+        new: true
+      });
       res.status(200).json({
         message: "Building register successfully",
         success: 1
       });
-  
+
     } catch (error) {
       console.error(error);
     }
@@ -61,7 +66,7 @@ router.post("/register",  auth, async (req, res) => {
 
 
 
-/////////// For Get building ///////////////
+/////////// For Get building ////////////////////////////
 router.get("/get-with-organization/:organization_id", auth, async (req, res) => {
   try {
     if (req.user.role === 'examiner') return res.status(400).json({ message: "No permission to perform this action", success: 0 });
@@ -98,8 +103,7 @@ router.get("/get-with-organization/:organization_id", auth, async (req, res) => 
 
 
 
-////////// GET Specific Building with ID     
-
+////////// GET Specific Building with ID /////////////   
 router.get("/:id", auth, async (req, res) => {
   try {
 
@@ -134,14 +138,12 @@ router.get("/:id", auth, async (req, res) => {
     });
   }
 });
-
-/////////////////////////////////////////////////////
-
+//////////////////////////////////////////////////////
 
 
 
-////////// UPDATE Specific Building with ID     
 
+////////// UPDATE Specific Building with ID /////////    
 router.put("/:id", auth, async (req, res) => {
   try {
 
@@ -153,25 +155,14 @@ router.put("/:id", auth, async (req, res) => {
       return res.json({ message: "No building found with this ID", success: 0 });
     }
 
-    // if (JSON.stringify(req.body) === '{}') {
-    //   return res.status(200).json({
-    //     message: "No field provide",
-    //     success: 0
-    //   });
-    // }
-    let body ={};
+    if (JSON.stringify(req.body) === '{}') {
+      return res.status(200).json({
+        message: "No field provide",
+        success: 0
+      });
+    }
+    let body = {};
 
-    // if (req.file){
-    //   body = {
-    //     ...req.body,
-    //     qr_code_image: req.file.filename
-    //   }
-    //   }else{
-    //     body= {
-    //       ...req.body
-    //     }
-    //   }
-    
     await Building.findOneAndUpdate({ _id: req.params.id }, body, {
       new: true
     });
@@ -189,13 +180,11 @@ router.put("/:id", auth, async (req, res) => {
     });
   }
 });
-
 /////////////////////////////////////////////////////
 
 
 
 //////// For Delete Building ///////////////////////
-
 router.delete("/:id", auth, async (req, res) => {
   if (req.user.role === 'examiner') return res.status(400).json({ message: "No permission to perform this action", success: 0 });
   let building = await Building.findOne({ _id: req.params.id });
@@ -209,8 +198,7 @@ router.delete("/:id", auth, async (req, res) => {
     success: 1
   });
 });
-
-//////////////////////////////////////////////////////////
+////////////////////////////////////////////////////
 
 
 

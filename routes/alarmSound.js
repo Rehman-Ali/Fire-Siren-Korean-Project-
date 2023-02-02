@@ -7,8 +7,7 @@ const multer = require('multer');
 const cloudinary = require('cloudinary').v2;
 
 
-/////////// For Get All AlarmSound ///////////////
-
+/////////// For Get All AlarmSound //////////////////////
 router.get("/list/:building_id", auth, async (req, res) => {
   try {
     if (req.user.role !== 'admin') return res.status(400).json({ message: "No permission to perform this action", success: 0 });
@@ -31,8 +30,6 @@ router.get("/list/:building_id", auth, async (req, res) => {
     });
   }
 });
-
-
 /////////////////////////////////////////////////////////
 
 
@@ -162,7 +159,7 @@ router.put("/:id", auth, async (req, res) => {
 
 
 });
-//////////////////////////////
+////////////////////////////////////////////////////
 
 
 
@@ -196,11 +193,10 @@ router.delete("/:id", auth, async (req, res) => {
   }
 
 });
-//////////////////////////////////////////////////////////
+//////////////////////////////////////////////////
 
 
-/// for upload audi file///////
-
+/// for upload audi file////////////////////////
 router.post("/add", auth, async (req, res) => {
 
   if (req.user.role !== 'admin') return res.status(400).json({ message: "No permission to perform this action", success: 0 });
@@ -291,8 +287,7 @@ router.post("/add", auth, async (req, res) => {
     }
   });
 });
-
-//...
+////////////////////////////////////////////////
 
 
 
