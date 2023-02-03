@@ -4,11 +4,11 @@ const router = express.Router();
 const { FireAlarm, validate } = require("../models/FireAlarm");
 const { Device } = require("../models/Device");
 const { Building } = require("../models/Building");
+const { raw } = require("body-parser");
 
 
 
 /////////// For Get All FireAlarm of specific Device ///////////////
-
 router.get("/list/:device_code", auth, async (req, res) => {
   try {
     // if (req.user.role !== 'admin') return res.status(400).json({ message: "No permission to perform this action", success: 0 });
@@ -33,13 +33,10 @@ router.get("/list/:device_code", auth, async (req, res) => {
     });
   }
 });
-
-/////////////////////////////////////////////////////////
-
+////////////////////////////////////////////////////////////////////
 
 
 /////////// For Get All FireAlarm of Building ///////////////
-
 router.get("/list-building/:building_id", auth, async (req, res) => {
   try {
     // if (req.user.role !== 'admin') return res.status(400).json({ message: "No permission to perform this action", success: 0 });
@@ -88,9 +85,7 @@ router.get("/list-building/:building_id", auth, async (req, res) => {
     });
   }
 });
-/////////////////////////////////////////////////////////
-
-
+/////////////////////////////////////////////////////////////
 
 
 /////////// For Get Single Fire Alarm  ///////////////
@@ -118,14 +113,10 @@ router.get("/:id", auth, async (req, res) => {
     });
   }
 });
-/////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////
 
 
-
-
-
-
-//////// For Delete Fire Alarm ///////////////////////
+//////// For Delete Fire Alarm ///////////////////////////
 router.delete("/:id", auth, async (req, res) => {
   try {
     // if (req.user.role !== 'admin') return res.status(400).json({ message: "No permission to perform this action", success: 0 });
@@ -205,7 +196,7 @@ router.post("/send", async (req, res) => {
     success: 1,
   });
 });
-//////////////////////////////////////////////
+/////////////////////////////////////////////////////////
 
 
 ///////////// Update the fire alarm  /////////////////
@@ -227,9 +218,7 @@ router.put("/:id", auth, async (req, res) => {
   });
 
 });
-//////////////////////////////
-
-
+//////////////////////////////////////////////////////
 
 
 /////////// for add Fire Alarm from User ///////////////
@@ -252,8 +241,48 @@ router.post("/send-notification", auth, async (req, res) => {
     success: 1,
   });
 });
-//////////////////////////////////////////////
+////////////////////////////////////////////////////////
 
 
+///////////// For delete fire alarm from User ///////////
+router.delete("/delete-notification", auth, async (req, res) => {
+  try {
+
+    if (req.user.role !== 'admin') return res.status(200).json({ message: "message is here", success: 0 });
+
+    let findDevice = await FireAlarm.find({ _id: req.user._id });
+    if (findDevice) return res.json({ message: "res is here", success: 1 });
+
+    let body = {
+      first_name: req.body.first_name,
+      last_name: req.body.last_name,
+      email: req.body.email,
+      password: req.body.password,
+      address: req.body.address,
+      state: req.body.state
+    }
+
+    await FireAlarm.save(body);
+
+    for (var i = 0; i < findDevice.length; i++) {
+      let arr = [];
+      let filterArr = findDevice.filter(item => item.start_date > new Date());
+      arr.push(filterArr[0]);
+    }
+
+    res.state(200).json({
+      data: arr,
+      message: "Data get Successfuly",
+      success: 1
+    })
+
+  } catch (err) {
+     res.status(400).json({
+      message : "Server Issue",
+      succcess : 0
+     })
+  }
+});
+/////////////////////////////////////////////////////////
 
 module.exports = router;

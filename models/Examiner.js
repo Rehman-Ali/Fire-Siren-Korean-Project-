@@ -23,18 +23,18 @@ const ExaminerSchema = new mongoose.Schema({
   phone: {
     type: String,
   },
-  operator_id:{
+  operator_id: {
     type: ObjectId,
-    ref : 'Operator',
+    ref: 'Operator',
   },
-  
+
   organization_id: {
     type: ObjectId,
     ref: 'Organization'
   },
-  status:{
-    type:String,
-    enum :["approved", "pending"]
+  status: {
+    type: String,
+    enum: ["approved", "pending"]
   },
   role: {
     type: String,

@@ -16,17 +16,17 @@ const DeviceSchema = new mongoose.Schema({
     ref: 'Building',
     required: true
   },
-  added_by:{
+  added_by: {
     type: ObjectId,
-    refPath : 'addedValue',
+    refPath: 'addedValue',
   },
   addedValue: {
     type: String,
     enum: ['User', 'Operator', "Examiner"]
   }
-  }, {
-    timestamps: true
-  });
+}, {
+  timestamps: true
+});
 
 const Device = mongoose.model("Device", DeviceSchema);
 function validateDevice(Device) {
@@ -35,8 +35,8 @@ function validateDevice(Device) {
     device_installed_location: Joi.string(),
     building_id: Joi.objectId(),
     added_by: Joi.objectId(),
-    addedValue:Joi.string(),
-   
+    addedValue: Joi.string(),
+
   };
   return Joi.validate(Device, schema);
 }

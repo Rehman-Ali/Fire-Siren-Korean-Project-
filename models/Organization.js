@@ -3,12 +3,12 @@ const Joi = require("joi");
 Joi.objectId = require('joi-objectid')(Joi);
 const ObjectId = mongoose.Schema.Types.ObjectId;
 const OrganizationSchema = new mongoose.Schema({
-  administrator_id:{
-    type : ObjectId,
-    ref:'User',
+  administrator_id: {
+    type: ObjectId,
+    ref: 'User',
   },
   organization_name: {
-    type: String, 
+    type: String,
   },
   address: {
     type: String,
@@ -16,7 +16,7 @@ const OrganizationSchema = new mongoose.Schema({
   phone: {
     type: String,
   },
- },{
+}, {
   timestamps: true
 });
 

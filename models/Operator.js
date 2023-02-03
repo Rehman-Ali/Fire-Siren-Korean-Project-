@@ -23,9 +23,9 @@ const OperatorSchema = new mongoose.Schema({
   phone: {
     type: String,
   },
-  status:{
-    type:String,
-    enum:["approved", "pending"]
+  status: {
+    type: String,
+    enum: ["approved", "pending"]
   },
   organization_id: {
     type: ObjectId,

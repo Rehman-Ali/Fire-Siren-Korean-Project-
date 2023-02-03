@@ -10,7 +10,7 @@ const FireAlarmSchema = new mongoose.Schema({
     type: ObjectId,
     ref: 'Device',
   },
-  building_id:{
+  building_id: {
     type: ObjectId,
     ref: 'Building',
   },
@@ -28,7 +28,7 @@ const FireAlarmSchema = new mongoose.Schema({
   addedValue: {
     type: String,
     enum: ['User', 'Operator', 'Examiner', 'Device']
-  }
+  } 
 }, {
   timestamps: true
 });

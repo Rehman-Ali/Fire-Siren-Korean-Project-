@@ -1,7 +1,5 @@
 const mongoose = require("mongoose");
-const bcrypt = require("bcryptjs");
 const Joi = require("joi");
-const string = require("joi/lib/types/string");
 Joi.objectId = require('joi-objectid')(Joi);
 const ObjectId = mongoose.Schema.Types.ObjectId;
 const BuildingSchema = new mongoose.Schema({
@@ -20,18 +18,18 @@ const BuildingSchema = new mongoose.Schema({
   },
   building_state: {
     type: String,
-    enum:['Safe', 'Info', 'Notify', 'Warning', 'Danger'],
-    default:"Safe" 
+    enum: ['Safe', 'Info', 'Notify', 'Warning', 'Danger'],
+    default: "Safe"
   },
   qr_info: {
-    image_url:{
+    image_url: {
       type: String,
     },
-    public_id:{
+    public_id: {
       type: String
     }
   },
-  added_by:{
+  added_by: {
     type: ObjectId,
     refPath: 'addedValue'
   },
