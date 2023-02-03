@@ -11,6 +11,7 @@ const examiner = require("./routes/examiner");
 const building = require("./routes/building");
 const alarmSound = require("./routes/alarmSound");
 const fireAlarm  = require("./routes/fireAlarm");
+const appConfig  = require("./routes/appConfig");
 require('dotenv').config({path: __dirname + '/.env'})
 const cors = require("cors");
 app.use(cors());
@@ -59,6 +60,7 @@ app.use("/api/examiner", examiner);
 app.use("/api/building", building);
 app.use("/api/alarm-sound", alarmSound);
 app.use("/api/fire-alarm", fireAlarm);
+app.use("/api/app-config", appConfig);
 
 const PORT = process.env.PORT || 8080;
 

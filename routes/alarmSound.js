@@ -279,7 +279,7 @@ router.post("/add", auth, async (req, res) => {
           alarmSound.addedValue = 'User';
           await alarmSound.save();
           res.status(200).json({
-            message: "Building register successfully",
+            message: "Alarm sound save successfully",
             success: 1,
             result: result
           });

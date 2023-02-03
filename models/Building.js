@@ -43,7 +43,7 @@ const BuildingSchema = new mongoose.Schema({
 const Building = mongoose.model("Building", BuildingSchema);
 function validateBuilding(building) {
   const schema = {
-    organization_id: Joi.string(),
+    organization_id: Joi.objectId(),
     building_name: Joi.string(),
     building_address: Joi.string(),
     building_phone: Joi.string(),
