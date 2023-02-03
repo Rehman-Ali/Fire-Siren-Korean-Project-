@@ -244,45 +244,5 @@ router.post("/send-notification", auth, async (req, res) => {
 ////////////////////////////////////////////////////////
 
 
-///////////// For delete fire alarm from User ///////////
-router.delete("/delete-notification", auth, async (req, res) => {
-  try {
-
-    if (req.user.role !== 'admin') return res.status(200).json({ message: "message is here", success: 0 });
-
-    let findDevice = await FireAlarm.find({ _id: req.user._id });
-    if (findDevice) return res.json({ message: "res is here", success: 1 });
-
-    let body = {
-      first_name: req.body.first_name,
-      last_name: req.body.last_name,
-      email: req.body.email,
-      password: req.body.password,
-      address: req.body.address,
-      state: req.body.state
-    }
-
-    await FireAlarm.save(body);
-
-    for (var i = 0; i < findDevice.length; i++) {
-      let arr = [];
-      let filterArr = findDevice.filter(item => item.start_date > new Date());
-      arr.push(filterArr[0]);
-    }
-
-    res.state(200).json({
-      data: arr,
-      message: "Data get Successfuly",
-      success: 1
-    })
-
-  } catch (err) {
-     res.status(400).json({
-      message : "Server Issue",
-      succcess : 0
-     })
-  }
-});
-/////////////////////////////////////////////////////////
 
 module.exports = router;
