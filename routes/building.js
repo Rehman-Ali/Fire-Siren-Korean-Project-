@@ -116,7 +116,7 @@ router.get("/:id", auth, async (req, res) => {
     ]).
       exec(function (err, data) {
         if (err) return res.status(400).json({ message: "something wrong happened!", success: 0 });
-        if (data.length < 0) {
+        if (!data) {
           res.status(200).json({
             message: "No building found!",
             success: 1,
