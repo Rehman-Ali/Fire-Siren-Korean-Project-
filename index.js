@@ -79,9 +79,11 @@ const swaggerOptions = {
     },
     servers: [
       {
-        url: 'http://localhost:8080/',
-        // url: process.env.HOST_URL
+        url: 'https://fire-siren-project.cleverapps.io/'
       },
+      {
+        url: 'http://localhost:8080/',
+      }
     ],
     components: {
       securitySchemes: {
