@@ -265,6 +265,7 @@ router.post("/add", auth, async (req, res) => {
       overwrite: true,
       resource_type: "raw"
     };
+    
     try {
       // Upload the image
       await cloudinary.uploader.upload(path, options)
